@@ -1,5 +1,8 @@
 import os,time # import os buat clear log, time supaya nambahin delay
+from logo import logo
 
+print(logo)
+time.sleep(2.5)
 def lihatTransaksi(): # fungsi liat daftar transaksi
     print("\n====== Semua Transaksi ======") 
     if jumlahTransaksi == 0:
