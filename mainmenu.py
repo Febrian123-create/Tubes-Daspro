@@ -1,6 +1,5 @@
 import os,time # import os buat clear log, time supaya nambahin delay
 
-
 def lihatTransaksi(): # fungsi liat daftar transaksi
     print("\n====== Semua Transaksi ======") 
     if jumlahTransaksi == 0:
@@ -27,18 +26,25 @@ def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
         print("Pilihan tidak valid.")
 
 def login(): # menu login admin/user
-    users = [["admin1","admin123","admin"],["user1","user123","user"]] # index 0 = username, index 1 = password
-    print("\n====== Login ======\n")
+    os.system("cls")
+    users = [["admin1","admin123","admin"]] # index 0 = username, index 1 = password
+
+    print("\n====== Login Admin ======\n")
     username = input("Username: ")
     password = input("Password: ")
     for i in users:
         if (i[0]==username)and(i[1]==password):
             print(f"Login berhasil! Selamat datang {i[0]} !")
-            print(f"Selamat datang di program {i[2]}")
-            return i[2]
+            time.sleep(3)
+            menuAdmin()
     print("Login gagal, Username atau Password salah.")
-    return None
-
+    time.sleep(2)
+    ask = str(input("\nApakah mau lanjut login (y/n)")).upper()
+    if ask == "N":
+        main()
+    else:
+        login()
+  
 def tampilanMenu():
     menu = [["Ayam Geprek", 15000], # list menu sementara
             ["Nasi Goreng",20000],
@@ -62,6 +68,8 @@ def prosesUser():
     if (layanan == 1) or (layanan==2):
         if layanan == 2:
             meja = input("Masukkan nomor meja (1-10): ")
+        else:
+            meja = "Takeaway"
     else:
         print("Masukkan 1 atau 2.")
         time.sleep(2.5)
@@ -127,14 +135,15 @@ def main(): # notes: os.system("cls") buat clear log, time.sleep(<detik>) buat k
     print("="*50)
     print(" Selamat Datang di Program Manajemen Cafe MyCafe!")
     print("="*50)
-    role = login() 
-    if role == "admin": 
-        time.sleep(3)
-        os.system("cls")
-        menuAdmin()
-    elif role == "user":
+    print("\n1. Admin\n2. User\n")
+    role = int(input("Pilih Jenis Login: "))
+
+    if role == 1: 
+        login() 
+    elif role == 2:
         prosesUser()
     elif role == None:
+        print("Input Tidak Valid. Pilih 1 atau 2")
         time.sleep(2)
         main()
 
