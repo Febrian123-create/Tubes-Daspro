@@ -19,16 +19,68 @@ def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
     os.system("cls")
     print("\n====== Menu Admin ======\n")
     print("1. Lihat Transaksi")
-    print("2. Keluar")
+    print("2. Lihat Pendapatan Hari Ini")
+    print("3. Keluar")
     pilihan = input("Pilih menu: ")
     if pilihan == "1":
         lihatTransaksi()
     elif pilihan == "2":
+        tampilPendapatan()
+    elif pilihan =="3":
         main()
     else:
         print("Pilihan tidak valid.")
         time.sleep(1.5)
         menuAdmin()
+
+def campur(s_array,j_array,n,x,z):
+    y = 0
+    for i in range(n):
+        status = False
+        for j in range(y):
+            if transaksi[i][x] == s_array[j]:
+                j_array[j] += transaksi[i][z]
+                status = True
+        if status==False:
+            s_array[y] = transaksi[i][x]
+            j_array[y] = transaksi[i][z]
+            y += 1
+            
+def tampilPendapatan():
+    i = 0
+    n = 0
+    jumlah = 0
+    while transaksi[i][0] != None:
+        jumlah += transaksi[i][3]
+        n += 1
+        i += 1
+    print("Total pendapatan hari ini: Rp.",jumlah)
+    print("Total Pendapatan dari meja:")
+    s_array=[None]*100
+    j_array=[0]*100
+    print('='*30)
+    campur(s_array,j_array,n,0,3)
+    for i in range(0,n,1):
+        if(s_array[i]!=None):
+            print(f"Meja {s_array[i]} : Rp.{j_array[i]}")
+    print("Total pendapatan/menu:")
+    s_array=[None]*100
+    j_array=[0]*100
+    print('='*30)
+    campur(s_array,j_array,n,1,3)
+    for i in range(0,n,1):
+        if(s_array[i]!=None):
+            print(f"Menu {s_array[i]} : Rp.{j_array[i]}")
+    print("Jumlah Menu yang laku:")
+    s_array=[None]*100
+    j_array=[0]*100
+    print('='*30)
+    campur(s_array,j_array,n,1,2)
+    for i in range(0,n,1):
+        if(s_array[i]!=None):
+            print(f"Menu {s_array[i]} : {j_array[i]}")
+
+
 def login(): # menu login admin/user
     os.system("cls")
     users = [["admin1","admin123","admin"]] # index 0 = username, index 1 = password
@@ -41,13 +93,14 @@ def login(): # menu login admin/user
             print(f"Login berhasil! Selamat datang {i[0]} !")
             time.sleep(3)
             menuAdmin()
-    print("Login gagal, Username atau Password salah.")
-    time.sleep(2)
-    ask = str(input("\nApakah mau lanjut login (y/n)")).upper()
-    if ask == "N":
-        main()
-    else:
-        login()
+        else:
+            print("Login gagal, Username atau Password salah.")
+            time.sleep(2)
+            ask = str(input("\nApakah mau lanjut login (y/n)")).upper()
+            if ask == "N":
+                main()
+            else:
+                login()
   
 def tampilanMenu():
     global num
