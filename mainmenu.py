@@ -24,7 +24,8 @@ def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
         main()
     else:
         print("Pilihan tidak valid.")
-
+        time.sleep(1.5)
+        menuAdmin()
 def login(): # menu login admin/user
     os.system("cls")
     users = [["admin1","admin123","admin"]] # index 0 = username, index 1 = password
@@ -46,6 +47,7 @@ def login(): # menu login admin/user
         login()
   
 def tampilanMenu():
+    global num
     menu = [["Ayam Geprek", 15000], # list menu sementara
             ["Nasi Goreng",20000],
             ["Indomie Telor",10000],
@@ -67,7 +69,7 @@ def prosesUser():
     layanan = int(input("Pilih layanan (1. Takeaway | 2. Dine In): "))
     if (layanan == 1) or (layanan==2):
         if layanan == 2:
-            meja = input("Masukkan nomor meja (1-10): ")
+            meja = input("Masukkan nomor meja: ")
         else:
             meja = "Takeaway"
     else:
@@ -86,6 +88,8 @@ def prosesUser():
         pilihMakanan = int(input("\nPilih nomor menu (0 jika selesai): "))
         if pilihMakanan == 0:
             check = False
+        elif pilihMakanan >= num:
+            print(f"Maaf makanan nomor {pilihMakanan} tidak ada, silahkan pilih makanan lain")
         else:
             jumlah = int(input("Masukkan Jumlah: "))
             if jumlah<=30: # proses masukin makanan ke pesanan sama daftar transaksi
@@ -142,7 +146,7 @@ def main(): # notes: os.system("cls") buat clear log, time.sleep(<detik>) buat k
         login() 
     elif role == 2:
         prosesUser()
-    elif role == None:
+    else:
         print("Input Tidak Valid. Pilih 1 atau 2")
         time.sleep(2)
         main()
