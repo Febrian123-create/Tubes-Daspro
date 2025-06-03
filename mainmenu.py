@@ -1,8 +1,8 @@
-import os,time
+import os,time # import os buat clear log, time supaya nambahin delay
 
 
-def lihatTransaksi():
-    print("\n====== Semua Transaksi ======")
+def lihatTransaksi(): # fungsi liat daftar transaksi
+    print("\n====== Semua Transaksi ======") 
     if jumlahTransaksi == 0:
         print("Belum ada transaksi.")
         time.sleep(2)
@@ -13,7 +13,7 @@ def lihatTransaksi():
         input("Tekan Enter untuk keluar: ")
     menuAdmin()
 
-def menuAdmin():
+def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
     os.system("cls")
     print("\n====== Menu Admin ======\n")
     print("1. Lihat Transaksi")
@@ -26,8 +26,8 @@ def menuAdmin():
     else:
         print("Pilihan tidak valid.")
 
-def login():
-    users = [["admin1","admin123","admin"],["user1","user123","user"]]
+def login(): # menu login admin/user
+    users = [["admin1","admin123","admin"],["user1","user123","user"]] # index 0 = username, index 1 = password
     print("\n====== Login ======\n")
     username = input("Username: ")
     password = input("Password: ")
@@ -38,8 +38,9 @@ def login():
             return i[2]
     print("Login gagal, Username atau Password salah.")
     return None
+
 def tampilanMenu():
-    menu = [["Ayam Geprek", 15000],
+    menu = [["Ayam Geprek", 15000], # list menu sementara
             ["Nasi Goreng",20000],
             ["Indomie Telor",10000],
             ["Es Teh", 5000],
@@ -47,7 +48,7 @@ def tampilanMenu():
             ["Susu Murni", 8000]]
     print("\n====== Menu ======\n")
     num = 1
-    for i in menu:
+    for i in menu: # print menu
         print(f"{num}. {i[0]} - Rp {i[1]}")
         num+=1
     return menu
@@ -79,7 +80,7 @@ def prosesUser():
             check = False
         else:
             jumlah = int(input("Masukkan Jumlah: "))
-            if jumlah<=30:
+            if jumlah<=30: # proses masukin makanan ke pesanan sama daftar transaksi
                 index = pilihMakanan-1
                 nama = menu[index][0]
                 harga = menu[index][1]
@@ -98,7 +99,7 @@ def prosesUser():
             else:
                 print("Maaf pesanan tidak bisa melebihi 30 item")
     
-    print("\n====== Struk Pembayaran ======\n")
+    print("\n====== Struk Pembayaran ======\n") # cetak struk
     total = 0
     for i in range (jumlahPesanan):
         nama = pesanan[i][0]
@@ -108,7 +109,7 @@ def prosesUser():
         print(f"{nama} x{jumlah} = Rp {subtotal}")
         total += subtotal
 
-    print(f"\nTotal Bayar: Rp. {total}")
+    print(f"\nTotal Bayar: Rp. {total}") # proses bayar
     bayar = int(input("Masukkan jumlah uang: "))
     while bayar < total:
         print("Uang tidak cukup.")
@@ -121,13 +122,13 @@ def prosesUser():
     time.sleep(1.5)
     main()
 
-def main():
+def main(): # notes: os.system("cls") buat clear log, time.sleep(<detik>) buat kasih efek delay second
     os.system("cls")
     print("="*50)
     print(" Selamat Datang di Program Manajemen Cafe MyCafe!")
     print("="*50)
     role = login() 
-    if role == "admin":
+    if role == "admin": 
         time.sleep(3)
         os.system("cls")
         menuAdmin()
@@ -136,8 +137,9 @@ def main():
     elif role == None:
         time.sleep(2)
         main()
+
 if __name__ == '__main__':  
-    transaksi = [None]*100
+    transaksi = [None]*100 # var global kita
     for i in range (0,100):
         transaksi[i]=[None]*4
     jumlahTransaksi = 0  
