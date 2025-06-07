@@ -20,18 +20,38 @@ def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
     print("\n====== Menu Admin ======\n")
     print("1. Lihat Transaksi")
     print("2. Lihat Pendapatan Hari Ini")
-    print("3. Keluar")
+    print("3. Cari Transaksi Berdasarkan Menu")
+    print("4. Keluar")
     pilihan = input("Pilih menu: ")
     if pilihan == "1":
         lihatTransaksi()
     elif pilihan == "2":
         tampilPendapatan()
-    elif pilihan =="3":
+    elif pilihan == "3":
+        tampilanMenu()
+        carimenu = str(input("Menu yang dicari : "))
+        SearchMenu(carimenu)
+        time.sleep(5)
+        menuAdmin()
+    elif pilihan =="4":
         main()
     else:
         print("Pilihan tidak valid.")
         time.sleep(1.5)
         menuAdmin()
+
+def SearchMenu(carimenu):
+    global jumlahTransaksi, transaksi
+    transaksi[jumlahTransaksi] = carimenu
+    i = 0
+    while (transaksi[i][1] != carimenu):
+        i += 1
+    for j in range(0,100,1):
+        if (i < jumlahTransaksi):
+            print(f"Transaksi ditemukan: Meja {transaksi[i][0]}, Menu {transaksi[i][1]}, Jumlah {transaksi[i][2]}, Total Rp {transaksi[i][3]}")
+        else:
+            print("Transaksi tidak ditemukan")
+
 
 def campur(s_array,j_array,n,x,z):
     y = 0
