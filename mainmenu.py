@@ -1,8 +1,25 @@
+import csv
 import os,time # import os buat clear log, time supaya nambahin delay
 from logo import logo
 
 print(logo)
 time.sleep(2.5)
+def bacacsv(name,ukuran):
+    matriks=[None]*100
+    for i in range(0,100,1):
+        matriks[i]=[None]*ukuran
+    with open(name, mode="r") as file:
+        reader = csv.reader(file)
+        skip=True
+        i=0
+        for row in reader:
+            if (skip==True):
+                skip=False
+            else:
+                for j in range(0,ukuran,1):
+                    matriks[i][j]=row[j]
+                i+=1
+    return matriks
 def lihatTransaksi(): # fungsi liat daftar transaksi
     print("\n====== Semua Transaksi ======") 
     if jumlahTransaksi == 0:
@@ -39,7 +56,6 @@ def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
         print("Pilihan tidak valid.")
         time.sleep(1.5)
         menuAdmin()
-
 def SearchMenu(carimenu):
     global jumlahTransaksi, transaksi
     transaksi[jumlahTransaksi] = carimenu
@@ -99,28 +115,52 @@ def tampilPendapatan():
     for i in range(0,n,1):
         if(s_array[i]!=None):
             print(f"Menu {s_array[i]} : {j_array[i]}")
-
+def signup():
+    username = str(input("Buat Username anda: "))
+    password = str(input("Buat Password anda: "))
+    file_path = "C:/Users/FEBRIAN TIMOTIUS.S/Downloads/Tubes-Daspro/Tubes-Daspro/account.csv"
+    data=[username,password]
+    with open(file_path, mode="a+", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(data)
+    print("Akun berhasil dibuat!")
+    print("Kembali")
+    login()
 
 def login(): # menu login admin/user
     os.system("cls")
-    users = [["admin1","admin123","admin"]] # index 0 = username, index 1 = password
-
-    print("\n====== Login Admin ======\n")
-    username = input("Username: ")
-    password = input("Password: ")
-    for i in users:
-        if (i[0]==username)and(i[1]==password):
-            print(f"Login berhasil! Selamat datang {i[0]} !")
-            time.sleep(3)
-            menuAdmin()
-        else:
-            print("Login gagal, Username atau Password salah.")
-            time.sleep(2)
-            ask = str(input("\nApakah mau lanjut login (y/n)")).upper()
-            if ask == "N":
-                main()
-            else:
-                login()
+    nama='C:/Users/FEBRIAN TIMOTIUS.S/Downloads/Tubes-Daspro/Tubes-Daspro/account.csv'
+    maccount=bacacsv(nama,2)
+    print("\n====== ADMIN ======\n")
+    print("1.Sign Up Account")
+    print("2.Log in")
+    print("3.Keluar")
+    plh=int(input("Pilih: "))
+    if(plh==1):
+        print("\n====== SignUp Account ======\n")
+        signup()
+    elif(plh==2):
+        print("\n====== Login Admin ======\n")
+        username = input("Username: ")
+        password = input("Password: ")
+        index=0
+        status=True
+        while(maccount[index][0]!=None):
+            for j in range(0,3,1):
+                if (maccount[index][0]==username)and(maccount[index][1]==password):
+                    print(f"Login berhasil! Selamat datang {maccount[index][0]} !")
+                    time.sleep(3)
+                    menuAdmin()
+                    status=False
+            index+=1
+            if(status==False):
+                print("Login gagal, Username atau Password salah.")
+                time.sleep(2)
+                ask = str(input("\nApakah mau lanjut login (y/n)")).upper()
+                if ask == "N":
+                    main()
+                else:
+                    login()
   
 def tampilanMenu():
     global num
@@ -208,7 +248,16 @@ def prosesUser():
     os.system("cls")
     print("Terima kasih! Pesanan Anda sedang diproses.")
     time.sleep(1.5)
+    simpan_transaksi_csv()
     main()
+
+def simpan_transaksi_csv():
+    path="C:/Users/FEBRIAN TIMOTIUS.S/Downloads/Tubes-Daspro/Tubes-Daspro/transaksi.csv"
+    with open(path, mode="a+", newline="") as file:
+        writer = csv.writer(file)
+        for i in range(jumlahTransaksi):
+            writer.writerow(transaksi[i])
+    print("Data transaksi telah disimpan ke transaksi.csv")
 
 def main(): # notes: os.system("cls") buat clear log, time.sleep(<detik>) buat kasih efek delay second
     os.system("cls")
@@ -217,7 +266,6 @@ def main(): # notes: os.system("cls") buat clear log, time.sleep(<detik>) buat k
     print("="*50)
     print("\n1. Admin\n2. User\n")
     role = int(input("Pilih Jenis Login: "))
-
     if role == 1: 
         login() 
     elif role == 2:
