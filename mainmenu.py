@@ -16,6 +16,7 @@ def lihatTransaksi(): # fungsi liat daftar transaksi
     menuAdmin()
 
 def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
+    global num
     os.system("cls")
     print("\n====== Menu Admin ======\n")
     print("1. Lihat Transaksi")
@@ -28,9 +29,13 @@ def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
     elif pilihan == "2":
         tampilPendapatan()
     elif pilihan == "3":
-        tampilanMenu()
-        carimenu = str(input("Menu yang dicari : "))
-        SearchMenu(carimenu)
+        menu = tampilanMenu()
+        carimenu = int(input("Menu yang dicari : "))
+        if (0 < carimenu <= len(menu)):
+            SearchMenu(carimenu, menu)
+        else:
+            print("Menu tidak ditemukan")
+            time.sleep(2)
         time.sleep(5)
         menuAdmin()
     elif pilihan =="4":
@@ -40,17 +45,22 @@ def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
         time.sleep(1.5)
         menuAdmin()
 
-def SearchMenu(carimenu):
+def SearchMenu(carimenu, menu):
     global jumlahTransaksi, transaksi
-    transaksi[jumlahTransaksi] = carimenu
+    namaMenu = menu[carimenu - 1][0]
     i = 0
-    while (transaksi[i][1] != carimenu):
+    found = False
+    while (i < jumlahTransaksi):
+        if (transaksi[i][1] == namaMenu):
+            if (transaksi[i][0] != "Takeaway"):
+                print(f"Transaksi ditemukan: Meja {transaksi[i][0]}, Menu {transaksi[i][1]}, Jumlah {transaksi[i][2]}, Total Rp {transaksi[i][3]}")
+            else :
+                print(f"Transaksi ditemukan: {transaksi[i][0]}, Menu {transaksi[i][1]}, Jumlah {transaksi[i][2]}, Total Rp {transaksi[i][3]}")
+            found = True
         i += 1
-    for j in range(0,100,1):
-        if (i < jumlahTransaksi):
-            print(f"Transaksi ditemukan: Meja {transaksi[i][0]}, Menu {transaksi[i][1]}, Jumlah {transaksi[i][2]}, Total Rp {transaksi[i][3]}")
-        else:
-            print("Transaksi tidak ditemukan")
+    if (found != True):
+        print("Transaksi tidak ditemukan.")
+    
 
 
 def campur(s_array,j_array,n,x,z):
