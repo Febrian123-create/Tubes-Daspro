@@ -38,7 +38,8 @@ def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
     print("1. Lihat Transaksi")
     print("2. Lihat Pendapatan Hari Ini")
     print("3. Cari Transaksi Berdasarkan Menu")
-    print("4. Keluar")
+    print("4. Kelola Menu")
+    print("5. Keluar")
     pilihan = input("Pilih menu: ")
     if pilihan == "1":
         lihatTransaksi()
@@ -46,28 +47,35 @@ def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
         tampilPendapatan()
     elif pilihan == "3":
         tampilanMenu()
-        carimenu = str(input("Menu yang dicari : "))
-        SearchMenu(carimenu)
+        carimenu = int(input("Menu yang dicari : "))
+        SearchMenu(carimenu, 2)
         time.sleep(5)
         menuAdmin()
-    elif pilihan =="4":
+    elif pilihan == "4":
+        kelolaMenu()
+    elif pilihan =="5":
         main()
     else:
         print("Pilihan tidak valid.")
         time.sleep(1.5)
         menuAdmin()
-def SearchMenu(carimenu):
-    global jumlahTransaksi, transaksi
-    transaksi[jumlahTransaksi] = carimenu
+def SearchMenu(carimenu, layanan):
+    file = "Tubes-Daspro/transaksi.csv"
+    data = bacacsv(file, 4)
+    tampilanMenu()
+    found = False
+    print("\n====== Hasil Pencarian ======\n")
     i = 0
-    while (transaksi[i][1] != carimenu):
+    while (data[i][0] != None):
+        if (transaksi[i][1] == carimenu):
+            if (layanan == 1):
+                print(f"{i+1}. Takewaya, Menu {transaksi[i][1]}, Jumlah {transaksi[i][2]}, Total Rp {transaksi[i][3]}")
+            elif (layanan == 2):    
+                print(f"{i+1}. Meja: {transaksi[i][0]}, Menu {transaksi[i][1]}, Jumlah {transaksi[i][2]}, Total Rp {transaksi[i][3]}")
+            found = True
         i += 1
-    for j in range(0,100,1):
-        if (i < jumlahTransaksi):
-            print(f"Transaksi ditemukan: Meja {transaksi[i][0]}, Menu {transaksi[i][1]}, Jumlah {transaksi[i][2]}, Total Rp {transaksi[i][3]}")
-        else:
-            print("Transaksi tidak ditemukan")
-
+    if (found == False):
+        print("Transaksi tidak ditemukan")
 
 def campur(s_array,j_array,n,x,z):
     y = 0
@@ -118,7 +126,7 @@ def tampilPendapatan():
 def signup():
     username = str(input("Buat Username anda: "))
     password = str(input("Buat Password anda: "))
-    file_path = "C:/Users/FEBRIAN TIMOTIUS.S/Downloads/Tubes-Daspro/Tubes-Daspro/account.csv"
+    file_path = "Tubes-Daspro/account.csv"
     data=[username,password]
     with open(file_path, mode="a+", newline="") as file:
         writer = csv.writer(file)
@@ -129,7 +137,7 @@ def signup():
 
 def login(): # menu login admin/user
     os.system("cls")
-    nama='C:/Users/FEBRIAN TIMOTIUS.S/Downloads/Tubes-Daspro/Tubes-Daspro/account.csv'
+    nama='Tubes-Daspro/account.csv'
     maccount=bacacsv(nama,2)
     print("\n====== ADMIN ======\n")
     print("1.Sign Up Account")
@@ -161,21 +169,112 @@ def login(): # menu login admin/user
                     main()
                 else:
                     login()
-  
+
+def kelolaMenu():
+    os.system("cls")
+    print("\n====== Kelola Menu ======\n")
+    print("1.Tambah Menu")
+    print("2.Hapus Menu")
+    print("3.Edit Menu")
+    print("4.Kembali")
+    plh=int(input("Pilih Menu: "))
+    if (plh == 1):
+        tambahMenu()
+    elif (plh == 2):
+        hapusMenu()
+    elif (plh == 3):
+        editMenu()
+    elif (plh == 4):
+        time.sleep(1.5)
+        menuAdmin()
+    else:
+        print("Pilihan tidak valid.")
+        time.sleep(1.5)
+        kelolaMenu
+
 def tampilanMenu():
     global num
-    menu = [["Ayam Geprek", 15000], # list menu sementara
-            ["Nasi Goreng",20000],
-            ["Indomie Telor",10000],
-            ["Es Teh", 5000],
-            ["Kopi Susu", 8000],
-            ["Susu Murni", 8000]]
+    file = "Tubes-Daspro/menu.csv"
+    menu = bacacsv(file,2)
+
     print("\n====== Menu ======\n")
     num = 1
-    for i in menu: # print menu
-        print(f"{num}. {i[0]} - Rp {i[1]}")
-        num+=1
+    i = 0 
+    while (menu[i][0] != None):
+        print(f"{num}. {menu[i][0]} - Rp {menu[i][1]}")
+        num += 1
+        i +=1
     return menu
+
+def tambahMenu():
+    file = "Tubes-Daspro/menu.csv"
+    print("\n====== Tambah Menu ======\n")
+    tampilanMenu()
+    nama = str(input("Masukkan menu baru: "))
+    harga = int(input("Harga menu: "))
+    with open(file, mode="a+", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([nama, harga])
+    print("Menu berhasil ditambahkan")
+    time.sleep(2)
+    kelolaMenu()
+
+def editMenu():
+    file = "Tubes-Daspro/menu.csv"
+    menu = bacacsv(file,2)
+    print("\n====== Edit Menu ======\n")
+    tampilanMenu()
+    baris = int(input("Pilih nomor menu yang ingin diedit: ")) - 1
+    if (baris < 0 or menu[baris][0] == None):
+        print("Nomor menu tidak ada")
+        time.sleep(2)
+        kelolaMenu()
+        return
+    
+    edit_nama = input("Edit nama (kosongkan jika tidak ingin diubah): ")
+    edit_harga = input("Edit harga (kosongkan jika tidak ingin diubah): ")
+    if edit_nama != "":
+        menu[baris][0] = edit_nama
+    elif edit_harga != "":
+        menu[baris][1] = edit_harga
+
+    with open(file, mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Menu", "Harga"])
+        i = 0
+        while (menu[i][0] != None):
+            writer.writerow(menu[i])
+            i += 1
+    if (edit_nama == "" and edit_harga == ""):
+        print("Tidak ada menu yang diubah")
+    else:
+        print("Menu berhasil diubah.")
+    time.sleep(2)
+    kelolaMenu()
+
+def hapusMenu():
+    file = "Tubes-Daspro/menu.csv"
+    menu = bacacsv(file,2)
+    tampilanMenu()
+    hapus = int(input("Masukkan nomor menu yang ingin dihapus: ")) -1
+    if (hapus < 0 or menu[hapus][0] == None):
+        print("Nomor menu tidak ada")
+        time.sleep(2)
+        kelolaMenu()
+
+    #hapus data dari csv
+    del menu[hapus]
+
+    with open(file, mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Menu", "Harga"])
+        for row in menu:
+            if (row[0] != None):
+                writer.writerow(row)
+       
+    print("Menu berhasil dihapus.")
+    time.sleep(2)
+    kelolaMenu()
 
 def prosesUser():
     global jumlahTransaksi
@@ -211,7 +310,7 @@ def prosesUser():
             if jumlah<=30: # proses masukin makanan ke pesanan sama daftar transaksi
                 index = pilihMakanan-1
                 nama = menu[index][0]
-                harga = menu[index][1]
+                harga = int(menu[index][1])
                 pesanan[jumlahPesanan][0] = nama
                 pesanan[jumlahPesanan][1] = jumlah
                 pesanan[jumlahPesanan][2] = harga
@@ -252,7 +351,7 @@ def prosesUser():
     main()
 
 def simpan_transaksi_csv():
-    path="C:/Users/FEBRIAN TIMOTIUS.S/Downloads/Tubes-Daspro/Tubes-Daspro/transaksi.csv"
+    path="Tubes-Daspro/transaksi.csv"
     with open(path, mode="a+", newline="") as file:
         writer = csv.writer(file)
         for i in range(jumlahTransaksi):
