@@ -3,6 +3,18 @@ from logo import logo
 
 print(logo)
 time.sleep(2.5)
+
+def lihatMember():
+    os.system("cls")
+    print("\n====== Daftar Member ======\n")
+    if jumlahMember == 0:
+        print("Belum ada member yang terdaftar.")
+    else:
+        for i in range(jumlahMember):
+            print(f"{i+1}. Nama: {members[i][1]}, No. Telp: {members[i][0]}")
+    input("\nTekan Enter untuk kembali ke menu admin: ")
+    menuAdmin()
+
 def lihatTransaksi(): # fungsi liat daftar transaksi
     print("\n====== Semua Transaksi ======") 
     if jumlahTransaksi == 0:
@@ -12,7 +24,7 @@ def lihatTransaksi(): # fungsi liat daftar transaksi
     else:
         for i in range(jumlahTransaksi):
             print(f"{i+1}. Meja: {transaksi[i][0]} | Menu: {transaksi[i][1]} x{transaksi[i][2]} | Total: Rp {transaksi[i][3]}")
-        input("Tekan Enter untuk keluar: ")
+        input("Tekan Enter untuk kembali ke menu admin: ")
     menuAdmin()
 
 def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
@@ -22,7 +34,8 @@ def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
     print("1. Lihat Transaksi")
     print("2. Lihat Pendapatan Hari Ini")
     print("3. Cari Transaksi Berdasarkan Menu")
-    print("4. Keluar")
+    print("4. Lihat Daftar Member")
+    print("5. Keluar")
     pilihan = input("Pilih menu: ")
     if pilihan == "1":
         lihatTransaksi()
@@ -38,7 +51,9 @@ def menuAdmin(): # menu admin kalo udah berhasil masukin username sama pass
             time.sleep(2)
         time.sleep(5)
         menuAdmin()
-    elif pilihan =="4":
+    elif pilihan == "4":
+        lihatMember()
+    elif pilihan =="5":
         main()
     else:
         print("Pilihan tidak valid.")
@@ -110,6 +125,8 @@ def tampilPendapatan():
         if(s_array[i]!=None):
             print(f"Menu {s_array[i]} : {j_array[i]}")
 
+    input("\nTekan Enter untuk kembali ke menu admin: ")
+    menuAdmin()
 
 def login(): # menu login admin/user
     os.system("cls")
@@ -148,9 +165,11 @@ def tampilanMenu():
     return menu
 
 def prosesUser():
-    global jumlahTransaksi
+    global jumlahTransaksi, jumlahMember
     os.system("cls")
     meja = 0
+    discount = 0
+    loginStatus = False
     print("\n====== Layanan Cafe ======\n")
     layanan = int(input("Pilih layanan (1. Takeaway | 2. Dine In): "))
     if (layanan == 1) or (layanan==2):
@@ -207,13 +226,46 @@ def prosesUser():
         print(f"{nama} x{jumlah} = Rp {subtotal}")
         total += subtotal
 
-    print(f"\nTotal Bayar: Rp. {total}") # proses bayar
+    while loginStatus == False:
+        member = str(input("Apakah anda sudah mempunyai member (y/n): ")).upper()
+        if member == "Y":
+            telp = input("Masukkan nomor telepon member: ")
+            pw = input("Masukkan password member: ")
+            for i in range(jumlahMember):
+                if members[i][0] == telp and members[i][2] == pw:
+                    print(f"Selamat datang kembali, {members[i][1]} (Member)!")
+                    loginStatus = True
+                    discount = 90/100
+            if loginStatus == False:
+                print("Data member tidak ditemukan atau salah.")
+                time.sleep(2)
+        elif member == "N":
+            askMember = str(input("Apakah anda mau membuat member (y/n): ")).upper()
+            if askMember == "Y":
+                telp = input("Masukkan nomor telepon: ")
+                nama = input("Masukkan nama: ")
+                pw = input("Buat password: ")
+                members[jumlahMember][0] = telp
+                members[jumlahMember][1] = nama
+                members[jumlahMember][2] = pw
+                jumlahMember += 1
+                print(f"Member berhasil dibuat. Selamat datang {nama}!")
+                loginStatus = True  # Member baru langsung login bos
+                time.sleep(2)
+            else:
+                loginStatus = True
+    
+    if discount != 0: # proses bayar
+        print(f"\nTotal Bayar setelah discount: Rp. {total*discount}")
+    else:
+        print(f"\nTotal Bayar: Rp. {total}") 
+
     bayar = int(input("Masukkan jumlah uang: "))
     while bayar < total:
         print("Uang tidak cukup.")
         bayar = int(input("Masukkan ulang uang: "))
     kembalian = bayar - total
-    print(f"Kembalian: Rp {kembalian}")
+    print(f"Kembalian: Rp. {kembalian}")
     time.sleep(3)
     os.system("cls")
     print("Terima kasih! Pesanan Anda sedang diproses.")
@@ -238,6 +290,11 @@ def main(): # notes: os.system("cls") buat clear log, time.sleep(<detik>) buat k
         main()
 
 if __name__ == '__main__':  
+    members = [None]*100  # format: [no_telp, nama, password]
+    for i in range (0,100):
+        members[i]=[None]*3
+    jumlahMember = 0
+
     transaksi = [None]*100 # var global kita
     for i in range (0,100):
         transaksi[i]=[None]*4
