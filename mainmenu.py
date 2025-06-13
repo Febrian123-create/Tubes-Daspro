@@ -34,14 +34,21 @@ def lihatMember():
     menuAdmin()
 
 def lihatTransaksi():
+    os.system("cls")
+    nama = 'Tubes-Daspro/transaksi.csv'
+    mtransaksi = bacacsv(nama, 4)
     print("\n====== Semua Transaksi ======")
     if jumlahTransaksi == 0:
         print("Belum ada transaksi.")
         time.sleep(2)
         menuAdmin()
     else:
-        for i in range(jumlahTransaksi):
-            print(f"{i+1}. Meja: {transaksi[i][0]} | Menu: {transaksi[i][1]} x{transaksi[i][2]} | Total: Rp {transaksi[i][3]}")
+        num = 1
+        i=0
+        while (mtransaksi[i][0] != None):
+            print(f"{num}. Meja: {mtransaksi[i][0]} | Menu: {mtransaksi[i][1]} x{mtransaksi[i][2]} | Total: Rp {mtransaksi[i][3]}")
+            num += 1
+            i +=1
         input("Tekan Enter untuk kembali ke menu admin: ")
     menuAdmin()
 
@@ -91,6 +98,7 @@ def SearchMenu(carimenu, layanan):
                 print(f"{i+1}. Meja: {transaksi[i][0]}, Menu {transaksi[i][1]}, Jumlah {transaksi[i][2]}, Total Rp {transaksi[i][3]}")
             found = True
         i += 1
+        
 def kelolaMenu():
     os.system("cls")
     print("\n====== Kelola Menu ======\n")
@@ -178,7 +186,7 @@ def login():
     os.system("cls")
     nama = 'Tubes-Daspro/account.csv'
     maccount = bacacsv(nama, 2)
-    print("\n====== ADMIN ======\n")
+    print("\n====== MENU AWAL ======\n")
     print("1.Sign Up Account")
     print("2.Log in")
     print("3.Keluar")
@@ -211,7 +219,8 @@ def login():
                 main()
             else:
                 login()
-
+    elif plh == 3 :
+        main()
 def tampilanMenu():
     global num
     file = "Tubes-Daspro/menu.csv"
@@ -294,13 +303,58 @@ def hapusMenu():
     print("Menu berhasil dihapus.")
     time.sleep(2)
     kelolaMenu()
-
-def prosesUser():
-    global jumlahTransaksi, jumlahMember
-    os.system("cls")
-    meja = 0
+    
+def cekmember():
+    global total
     discount = 0
     loginStatus = False
+    nama = 'Tubes-Daspro/member.csv'
+    mmember = bacacsv(nama, 3)
+    while loginStatus==False:
+        telp = input("Masukkan nomor telepon member: ")
+        pw = input("Masukkan password member: ")
+        index = 0
+        status = True
+        while status==True:
+            if(mmember[index][0]==None):
+                status=False
+                loginStatus=True
+            elif mmember[index][0] == telp and mmember[index][2] == pw:
+                print(f"Login berhasil! Selamat datang {mmember[index][1]} !")
+                time.sleep(3)
+                status = False
+                diskon=90/100
+                discount=True
+                loginStatus=True
+            index += 1
+        if status==True:
+            print("Member tidak ditemukan mohon masukkan ulang no.telepon dan password")
+            time.sleep(2)
+            diskon=0
+            cekmember()
+            loginStatus=False    
+    if discount:
+        print(f"\nTotal Bayar setelah discount: Rp. {int(total * diskon)}")
+        total = int(total * diskon)
+    else:
+        print(f"\nTotal Bayar: Rp. {total}")
+        
+def buatmember():
+    telp = str(input("Masukkan telp anda: "))
+    nama = str(input("Masukkan nama anda: "))
+    pw = str(input("Buat password anda: "))
+    file_path = "Tubes-Daspro/member.csv"
+    data = [telp, nama,pw]
+    with open(file_path, mode="a+", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(data)
+    print("Akun berhasil dibuat!")
+    cekmember()
+    
+def prosesUser():
+    global jumlahTransaksi,total
+    os.system("cls")
+    meja = 0
     print("\n====== Layanan Cafe ======\n")
     layanan = int(input("Pilih layanan (1. Takeaway | 2. Dine In): "))
     if layanan == 2:
@@ -343,41 +397,15 @@ def prosesUser():
         subtotal = jumlah * harga
         print(f"{nama} x{jumlah} = Rp {subtotal}")
         total += subtotal
-
-    while not loginStatus:
-        member = str(input("Apakah anda sudah mempunyai member (y/n): ")).upper()
-        if member == "Y":
-            telp = input("Masukkan nomor telepon member: ")
-            pw = input("Masukkan password member: ")
-            for i in range(jumlahMember):
-                if members[i][0] == telp and members[i][2] == pw:
-                    print(f"Selamat datang kembali, {members[i][1]} (Member)!")
-                    loginStatus = True
-                    discount = 90 / 100
-                    break
-            if not loginStatus:
-                print("Data member tidak ditemukan atau salah.")
-                time.sleep(2)
-        elif member == "N":
-            askMember = str(input("Apakah anda mau membuat member (y/n): ")).upper()
-            if askMember == "Y":
-                telp = input("Masukkan nomor telepon: ")
-                nama = input("Masukkan nama: ")
-                pw = input("Buat password: ")
-                members[jumlahMember] = [telp, nama, pw]
-                jumlahMember += 1
-                print(f"Member berhasil dibuat. Selamat datang {nama}!")
-                loginStatus = True
-                time.sleep(2)
-            else:
-                loginStatus = True
-
-    if discount:
-        print(f"\nTotal Bayar setelah discount: Rp. {int(total * discount)}")
-        total = int(total * discount)
-    else:
-        print(f"\nTotal Bayar: Rp. {total}")
-
+    i_member = str(input("Apakah anda sudah mempunyai member (y/n): ")).upper()
+    if i_member == "Y":
+        cekmember()
+    elif i_member == "N":
+        askMember = str(input("Apakah anda mau membuat member (y/n): ")).upper()
+        if askMember == "Y":
+            buatmember() 
+        else:
+            print("Total yang harus dibayar:",total)
     bayar = int(input("Masukkan jumlah uang: "))
     while bayar < total:
         print("Uang tidak cukup.")
