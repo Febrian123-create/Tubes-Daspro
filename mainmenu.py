@@ -69,8 +69,6 @@ def menuAdmin():
         tampilanMenu()
         carimenu = int(input("Menu yang dicari : "))
         SearchMenu(carimenu, 2)
-        time.sleep(5)
-        menuAdmin()
     elif pilihan =="4":
         lihatMember()
     elif pilihan == "5":
@@ -89,14 +87,15 @@ def SearchMenu(carimenu, layanan):
     found = False
     print("\n====== Hasil Pencarian ======\n")
     i = 0
+    num = 1
     while (data[i][0] != None):
-        if (transaksi[i][1] == carimenu):
-            if (layanan == 1):
-                print(f"{i+1}. Takeaway, Menu {transaksi[i][1]}, Jumlah {transaksi[i][2]}, Total Rp {transaksi[i][3]}")
-            elif (layanan == 2):    
-                print(f"{i+1}. Meja: {transaksi[i][0]}, Menu {transaksi[i][1]}, Jumlah {transaksi[i][2]}, Total Rp {transaksi[i][3]}")
+        if (data[i][1] == menu[carimenu-1][0]):   
+            print(f"{num}. Meja: {data[i][0]}, Menu {data[i][1]}, Jumlah {data[i][2]}, Total Rp {data[i][3]}")
             found = True
+            num += 1
         i += 1
+    input("\nTekan Enter untuk kembali ke menu admin: ")
+    menuAdmin()
         
 def kelolaMenu():
     os.system("cls")
@@ -223,6 +222,23 @@ def login():
                 login()
     elif plh == 3 :
         main()
+    else:
+        print("Pilihan tidak valid. Silahkan pilih 1, 2, atau 3.")
+        time.sleep(2)
+        login()
+
+def loading(total):
+    for i in range(total + 1):
+        persen = (i * 100) / total  # buat itung persen 
+        bar = ''
+        for j in range(i):
+            bar += '='
+        for k in range(total - i):
+            bar += ' '
+        #\r untuk menghapus baris sebelumnya
+        print(f'\r[{bar}] {int(persen)}%', end='')
+        time.sleep(0.2)
+    return 
 
 def tampilanMenu():
     global menu
@@ -460,6 +476,7 @@ def prosesUser():
             buatmember() 
         else:
             print("Total yang harus dibayar:",total)
+        
     bayar = int(input("Masukkan jumlah uang: "))
     while bayar < total:
         print("Uang tidak cukup.")
@@ -468,7 +485,10 @@ def prosesUser():
     print(f"Kembalian: Rp. {kembalian}")
     time.sleep(3)
     os.system("cls")
-    print("Terima kasih! Pesanan Anda sedang diproses.")
+    print("Pesanan Anda sedang diproses.")
+    loading(30)
+    print("\nPesanan Anda telah selesai!")
+    time.sleep(1.5)
     i_rating = str(input("Apakah anda mau memberikan rating ke restoran ini? (y/n): ")).upper()
     if i_rating=="Y":
         GiveRating()
