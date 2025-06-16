@@ -51,7 +51,7 @@ def lihatTransaksi():
             i +=1
         input("Tekan Enter untuk kembali ke menu admin: ")
     menuAdmin()
-
+    
 def menuAdmin():
     os.system("cls")
     print("\n====== MENU ADMIN ======")
@@ -221,7 +221,9 @@ def login():
                 login()
     elif plh == 3 :
         main()
+
 def tampilanMenu():
+    global menu
     global num
     file = "Tubes-Daspro/menu.csv"
     menu = bacacsv(file,2)
@@ -350,7 +352,57 @@ def buatmember():
         writer.writerow(data)
     print("Akun berhasil dibuat!")
     cekmember()
+
+def GiveRating():
+    nama=str(input("Masukkan nama anda: "))
+    Rating = int(input("Masukkan rating anda (1-10): "))
+    deskripsi = str(input("Masukkan pesan anda"))
+    file_path = "Tubes-Daspro/rating.csv"
+    data=[nama,Rating,deskripsi]
+    with open(file_path, mode="a+", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(data)
+
+def tampilrating():
+    os.system("cls")
+    print("\n====== Rating Cafe ======\n")
+    nama = 'Tubes-Daspro/rating.csv'
+    mrating = bacacsv(nama, 3)
+    i=0
+    num=1
+    jumlah=0
+    while(mrating[i][0]!=None):
+        if(mrating[i][0]!=None):
+            print("Nama :",mrating[i][0])
+            print("Rating :",mrating[i][1])
+            print("Deskripsi :",mrating[i][2])
+            simpan=int(mrating[i][1])
+            jumlah+=simpan
+        print()
+        num+=1
+        i+=1
+    rata_rata=jumlah/i
+    print("Rata-rata rating cafe:",round(rata_rata,1))
+    input("\nTekan Enter untuk kembali ke menu user:")
+    usermenu()
     
+def usermenu():
+    os.system("cls")
+    print("\n====== Menu User ======\n")
+    print("1.Order")
+    print("2.Tampil Rating")
+    print("3.Keluar")
+    plh=int(input("Pilih fitur: "))
+    if plh==1:
+        prosesUser()
+    elif plh==2:
+        tampilrating()
+    elif plh ==3:
+        main()
+    else:
+        input("Pilihan tidak ada mohon input ulang (enter)")
+        usermenu()
+
 def prosesUser():
     global jumlahTransaksi,total
     os.system("cls")
@@ -415,6 +467,11 @@ def prosesUser():
     time.sleep(3)
     os.system("cls")
     print("Terima kasih! Pesanan Anda sedang diproses.")
+    i_rating = str(input("Apakah anda mau memberikan rating ke restoran ini? (y/n): ")).upper()
+    if i_rating=="Y":
+        GiveRating()
+    else:
+        print("Terimakasih sudah datang ke restoran kami!")
     time.sleep(1.5)
     simpan_transaksi_csv()
     main()
@@ -437,7 +494,7 @@ def main():
     if role == 1:
         login()
     elif role == 2:
-        prosesUser()
+        usermenu()
     else:
         print("Input Tidak Valid. Pilih 1 atau 2")
         time.sleep(2)
