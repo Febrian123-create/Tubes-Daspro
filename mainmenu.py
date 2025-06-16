@@ -24,13 +24,17 @@ def bacacsv(name, ukuran):
 
 def lihatMember():
     os.system("cls")
-    print("\n====== Daftar Member ======\n")
-    if jumlahMember == 0:
-        print("Belum ada member yang terdaftar.")
-    else:
-        for i in range(jumlahMember):
-            print(f"{i+1}. Nama: {members[i][1]}, No. Telp: {members[i][0]}")
-    input("\nTekan Enter untuk kembali ke menu admin: ")
+    nama = 'Tubes-Daspro/member.csv'
+    mmember = bacacsv(nama,3)
+    print("\n====== Semua Member ======")
+    num = 1
+    i=0
+    while(mmember[i][0] != None):
+        print(f"{num}. Nama: {mmember[i][1]} ")
+        print(f"Telepon: {mmember[i][0]} ")
+        num += 1
+        i +=1
+    input("Tekan Enter untuk kembali ke menu admin: ")
     menuAdmin()
 
 def lihatTransaksi():
@@ -38,20 +42,15 @@ def lihatTransaksi():
     nama = 'Tubes-Daspro/transaksi.csv'
     mtransaksi = bacacsv(nama, 4)
     print("\n====== Semua Transaksi ======")
-    if jumlahTransaksi == 0:
-        print("Belum ada transaksi.")
-        time.sleep(2)
-        menuAdmin()
-    else:
-        num = 1
-        i=0
-        while (mtransaksi[i][0] != None):
-            print(f"{num}. Meja: {mtransaksi[i][0]} | Menu: {mtransaksi[i][1]} x{mtransaksi[i][2]} | Total: Rp {mtransaksi[i][3]}")
-            num += 1
-            i +=1
-        input("Tekan Enter untuk kembali ke menu admin: ")
+    num = 1
+    i=0
+    while(mtransaksi[i][0] != None):
+        print(f"{num}. Meja: {mtransaksi[i][0]} | Menu: {mtransaksi[i][1]} x{mtransaksi[i][2]} | Total: Rp {mtransaksi[i][3]}")
+        num += 1
+        i +=1
+    input("Tekan Enter untuk kembali ke menu admin: ")
     menuAdmin()
-    
+
 def menuAdmin():
     os.system("cls")
     print("\n====== MENU ADMIN ======")
@@ -121,52 +120,55 @@ def kelolaMenu():
         time.sleep(1.5)
         kelolaMenu
 
-def campur(s_array, j_array, n, x, z):
+def campur(mtransaksi,s_array, j_array, n, x, z):
     y = 0
     for i in range(n):
         status = False
         for j in range(y):
-            if transaksi[i][x] == s_array[j]:
-                j_array[j] += transaksi[i][z]
+            if mtransaksi[i][x] == s_array[j]:
+                j_array[j] += int(mtransaksi[i][z])
                 status = True
         if not status:
-            s_array[y] = transaksi[i][x]
-            j_array[y] = transaksi[i][z]
+            s_array[y] = mtransaksi[i][x]
+            j_array[y] = int(mtransaksi[i][z])
             y += 1
 
 def tampilPendapatan():
+    nama = 'Tubes-Daspro/transaksi.csv'
+    mtransaksi = bacacsv(nama,4)
     i = 0
     n = 0
     jumlah = 0
-    while transaksi[i][0] != None:
-        jumlah += transaksi[i][3]
+    while mtransaksi[i][0] != None:
+        jumlah += int(mtransaksi[i][3])
         n += 1
         i += 1
     print("Total pendapatan hari ini: Rp.", jumlah)
+    print('=' * 30)
     print("Total Pendapatan dari meja:")
     s_array = [None] * 100
     j_array = [0] * 100
-    print('=' * 30)
-    campur(s_array, j_array, n, 0, 3)
+    campur(mtransaksi,s_array, j_array, n, 0, 3)
     for i in range(n):
         if s_array[i] != None:
             print(f"Meja {s_array[i]} : Rp.{j_array[i]}")
+    print('=' * 30)
     print("Total pendapatan/menu:")
     s_array = [None] * 100
     j_array = [0] * 100
-    print('=' * 30)
-    campur(s_array, j_array, n, 1, 3)
+    campur(mtransaksi,s_array, j_array, n, 1, 3)
     for i in range(n):
         if s_array[i] != None:
             print(f"Menu {s_array[i]} : Rp.{j_array[i]}")
+    print('=' * 30)
     print("Jumlah Menu yang laku:")
     s_array = [None] * 100
     j_array = [0] * 100
-    print('=' * 30)
-    campur(s_array, j_array, n, 1, 2)
+    campur(mtransaksi,s_array, j_array, n, 1, 2)
     for i in range(n):
         if s_array[i] != None:
             print(f"Menu {s_array[i]} : {j_array[i]}")
+    print('=' * 30)
     input("\nTekan Enter untuk kembali ke menu admin: ")
     menuAdmin()
 
