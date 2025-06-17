@@ -157,6 +157,9 @@ def akhirihari():
         input("\nTekan Enter untuk kembali ke menu admin: ")
     menuAdmin()
 
+# fungsi menu pilih fitur  untuk admin
+#  pilihan = var int input pilih menu
+
 def menuAdmin():
     os.system("cls")
     print("\n====== MENU ADMIN ======")
@@ -382,6 +385,11 @@ def PendapatanHari():
     input("\nTekan Enter untuk kembali ke menu admin: ")
     tampilPendapatan()
 
+# Fungsi buat akun untuk admin 
+# username = var input string buat username
+# password = var input string buat password
+# file_path = filepath csv
+# data = var array simpan username dan password
 def signup():
     username = str(input("Buat Username anda: "))
     password = str(input("Buat Password anda: "))
@@ -394,6 +402,16 @@ def signup():
     print("Kembali")
     login()
 
+# Fungsi login untuk admin 
+# nama = filepath csv
+# maccount = data login admin 
+# plh = var int input pilih jenis 
+# username = var input username  
+# password = var input password
+# index = var iterasi
+# status = var boolean
+# cstatus = var booleabn
+# ask = var input string yes or no
 def login():
     os.system("cls")
     nama = 'Tubes-Daspro/account.csv'
@@ -482,7 +500,12 @@ def tambahStok():
     time.sleep(2)
     menuAdmin()
 
-
+# Fungsi menampilkan menu yang ada
+# file = filepath csv
+# menu = data menu yang ada
+# num = var nampilin nomor
+# i  = var iterasi
+# stok = var stok makanan
 def tampilanMenu():
     global menu
     global num
@@ -587,10 +610,21 @@ def hapusMenu():
     print("Menu berhasil dihapus.")
     time.sleep(2)
     kelolaMenu()
-    
+
+# Fungsi cek member ada atau tidak
+# total = var total yang harus dibayar setelah diskon
+# discount = var boolean discount 
+# loginStatus = var boolean ada tidaknya member
+# telp = var input no telp member
+# pw = var input password member
+# index = var iterasi
+# status = var boolean
+# mmember = data member dari csv
+# nama = filepath csv
+# diskon = var besaran diskon
 def cekmember():
     global total
-    discount = 0
+    discount = False
     loginStatus = False
     nama = 'Tubes-Daspro/member.csv'
     mmember = bacacsv(nama, 3)
@@ -622,7 +656,12 @@ def cekmember():
         total = int(total * diskon)
     else:
         print(f"\nTotal Bayar: Rp. {total}")
-        
+
+# Fungsi membuat member untuk user 
+# telp = var input string no telp
+# nama = var input string nama user
+# pw = var input string password
+
 def buatmember():
     telp = str(input("Masukkan telp anda: "))
     nama = str(input("Masukkan nama anda: "))
@@ -689,7 +728,31 @@ def usermenu():
 # meja = var input milih nomor meja
 # layanan = var input pilih takeaway/dine in
 # menu = manggil fungsi tampilanMenu() 
-# pesanan = 
+# pesanan = array menyimpan nama, jumlah, harga
+# jumlahPesanan = var simpan jumlah pesanan yang ada
+# cond = var boolean looping while 
+# pilihMakanan = var input int pilih menu makanan 
+# num = var jumlah menu yang tersedia dari fungsi tampilanMenu()
+# index = var iterasi
+# stok_makanan = var stok makanan yang tersedia
+# jumlah = var jumlah makanan yang dipesan
+# menu = array dari fungsi tampilanMenu()
+# pesanan = array matriks
+# jumlahPesanan = var jumlah pesanan yang dipesan oleh user
+# nama = var nama menu yang dipilih
+# harga = var harga menu yang dipilih
+# totalItem =  total bayar per item yang dipilih dari jumlah * harga
+# transaksi = array matriks menyimpan meja, nama, jumlah, totalItem
+# jumlahTranskasi = var jumlah transaksi yang dipesan oleh user
+# total = harga seluruh barang yang harus dibayar
+# subtotal = rincian harga per item
+# condPunyaMember = var boolean
+# condBuatMember = var boolean
+# i_member = var input string punya member atau tidak
+# askMember = var input string mau buat member atau tidak
+# bayar = var input int bayar
+# kembalian = var kembalian dari uang yang dibayar
+# i_rating = var input string masukan rating
 def prosesUser():
     global jumlahTransaksi,total
     os.system("cls")
@@ -709,10 +772,11 @@ def prosesUser():
     pesanan = [[None]*3 for _ in range(100)]
     jumlahPesanan = 0
 
-    while True:
+    cond = True
+    while cond == True:
         pilihMakanan = int(input("\nPilih nomor menu (0 jika selesai): "))
         if pilihMakanan == 0:
-            break
+            cond = False
         elif pilihMakanan >= num:
             print(f"Maaf makanan nomor {pilihMakanan} tidak ada, silahkan pilih makanan lain")
         else:
@@ -741,16 +805,31 @@ def prosesUser():
         subtotal = jumlah * harga
         print(f"{nama} x{jumlah} = Rp {subtotal}")
         total += subtotal
-    i_member = str(input("Apakah anda sudah mempunyai member (y/n): ")).upper()
-    if i_member == "Y":
-        cekmember()
-    elif i_member == "N":
-        askMember = str(input("Apakah anda mau membuat member (y/n): ")).upper()
-        if askMember == "Y":
-            buatmember() 
+
+    condPunyaMember = False
+    while not condPunyaMember:
+        i_member = input("Apakah anda sudah mempunyai member (y/n): ").upper()
+        if i_member == "Y":
+            cekmember()
+            condPunyaMember = True
+        elif i_member == "N":
+            condBuatMember = False
+            while not condBuatMember:
+                askMember = input("Apakah anda mau membuat member (y/n): ").upper()
+                if askMember == "Y":
+                    buatmember()
+                    condBuatMember = True
+                    condPunyaMember = True
+                elif askMember == "N":
+                    print("Total yang harus dibayar:", total)
+                    condBuatMember = True
+                    condPunyaMember = True
+                else:
+                    print("Masukkan hanya 'y' atau 'n'.")
         else:
-            print("Total yang harus dibayar:",total)
-        
+            print("Masukkan hanya 'y' atau 'n'.")
+
+            
     bayar = int(input("Masukkan jumlah uang: "))
     while bayar < total:
         print("Uang tidak cukup.")
