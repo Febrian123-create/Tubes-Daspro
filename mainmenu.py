@@ -24,13 +24,25 @@ def bacacsv(name, ukuran):
 
 def cekcsv(file_path):
     with open(file_path, 'r') as file:
-        first_line = file.readline()
-        if not first_line:
+        line_count = 0
+        inside_line = False
+        stop = False
+        while not stop:
+            char = file.read(1)
+            if char == "":  # EOF
+                stop = True
+            else:
+                if char != '\n' and not inside_line:
+                    inside_line = True
+                    line_count += 1
+                elif char == '\n':
+                    inside_line = False
+                if line_count >= 2:
+                    stop = True
+        if line_count < 2:
             return True
-        second_line = file.readline()
-        if not second_line:
-            return True
-    return False
+        else:
+            return False
 
 def lihatMember():
     os.system("cls")
@@ -60,7 +72,9 @@ def lihatTransaksi():
         lihatTransaksiHari()
     elif plh ==3:
         menuAdmin()
-
+    else:
+        print("Pilihan tidak valid")
+        lihatTransaksi()
 def TransaksiHariIni():
     os.system("cls")
     nama = 'Tubes-Daspro/transaksi.csv'
@@ -232,9 +246,10 @@ def SearchMenu(carimenu, menu):
         data = bacacsv(f"Tubes-Daspro/{file}", 4)
         i = 0
         tanggal = file[10:18]
-        while True:
+        status=True
+        while status==True:
             if data[i][0] == None:
-                break
+                status=False
             elif (data[i][1] == menu[carimenu-1][0]):   
                 print(f"{num}. Tanggal : {tanggal} Meja {data[i][0]}, Menu {data[i][1]}, Jumlah {data[i][2]}, Total Rp {data[i][3]}")
                 found = True
@@ -270,7 +285,7 @@ def kelolaMenu():
     else:
         print("Pilihan tidak valid.")
         time.sleep(1.5)
-        kelolaMenu
+        kelolaMenu()
 
 def campur(mtransaksi,s_array, j_array, n, x, z):
     y = 0
@@ -298,7 +313,9 @@ def tampilPendapatan():
         PendapatanHari()
     elif plh ==3:
         menuAdmin()
-
+    else:
+        print("Pilihan tidak valid")
+        tampilPendapatan()
 def PendapatanHariIni():
     os.system("cls")
     nama = 'Tubes-Daspro/transaksi.csv'
@@ -344,6 +361,7 @@ def PendapatanHariIni():
         print("Belum ada transaksi")
         input("\nTekan Enter untuk kembali ke menu Admin: ")
         menuAdmin()
+
 def PendapatanHari():
     os.system("cls")
     tanggal=input("Masukkan tanggal (DDMMYYYY): ")
@@ -474,7 +492,9 @@ def loading(total):
         print(f'\r[{bar}] {int(persen)}%', end='')
         time.sleep(0.2)
     return 
+
 def tambahStok():
+    os.system("cls")
     file = "Tubes-Daspro/menu.csv"
     menu = bacacsv(file, 3)
     print("\n====== Tambah Stok ======\n")
@@ -485,7 +505,8 @@ def tambahStok():
         time.sleep(2)
         tambahStok()
         return
-    
+    else:
+        menuAdmin()
     tambah_stok = int(input("Masukkan jumlah stok yang ingin ditambahkan: "))
     menu[baris][2] = int(menu[baris][2]) + tambah_stok  
 
@@ -517,9 +538,9 @@ def tampilanMenu():
     while (menu[i][0] != None):
         stok = menu[i][2]
         if stok == "0":
-            print(f"{num}. {menu[i][0]} - Rp {menu[i][1]} (habis)")
+            print(f"{num}. {menu[i][0]} - Rp {menu[i][1]} - Stok:(habis)")
         else:    
-            print(f"{num}. {menu[i][0]} - Rp {menu[i][1]}")
+            print(f"{num}. {menu[i][0]} - Rp {menu[i][1]} - Stok:{menu[i][2]}")
         num += 1
         i +=1
     return menu
@@ -529,6 +550,7 @@ def tampilanMenu():
 # harga : untuk menginput harga menu baru
 # writer : untuk menulis data ke dalam file csv
 def tambahMenu():
+    os.system("cls")
     file = "Tubes-Daspro/menu.csv"
     print("\n====== Tambah Menu ======\n")
     tampilanMenu()
@@ -551,8 +573,9 @@ def tambahMenu():
 # writer : untuk menulis data ke dalam file csv
 # i : untuk menghitung jumlah menu yang sudah ada
 def editMenu():
+    os.system("cls")
     file = "Tubes-Daspro/menu.csv"
-    menu = bacacsv(file,2)
+    menu = bacacsv(file,3)
     print("\n====== Edit Menu ======\n")
     tampilanMenu()
     baris = int(input("Pilih nomor menu yang ingin diedit: ")) - 1
@@ -561,6 +584,8 @@ def editMenu():
         time.sleep(2)
         kelolaMenu()
         return
+    else:
+        kelolaMenu()
     
     edit_nama = input("Edit nama (kosongkan jika tidak ingin diubah): ")
     edit_harga = input("Edit harga (kosongkan jika tidak ingin diubah): ")
@@ -571,7 +596,7 @@ def editMenu():
 
     with open(file, mode="w", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow(["Menu", "Harga"])
+        writer.writerow(["Menu", "Harga","Stok"])
         i = 0
         while (menu[i][0] != None):
             writer.writerow(menu[i])
@@ -588,21 +613,23 @@ def editMenu():
 # menu : untuk menyimpan data dari file csv
 # hapus : untuk menginput nomor menu yang ingin dihapus
 def hapusMenu():
+    os.system("cls")
     file = "Tubes-Daspro/menu.csv"
-    menu = bacacsv(file,2)
+    menu = bacacsv(file,3)
     tampilanMenu()
     hapus = int(input("Masukkan nomor menu yang ingin dihapus: ")) -1
     if (hapus < 0 or menu[hapus][0] == None):
         print("Nomor menu tidak ada")
         time.sleep(2)
         kelolaMenu()
-
+    else:
+        kelolaMenu()
     #hapus data dari csv
-    del menu[hapus]
+    menu[hapus][0] = None
 
     with open(file, mode="w", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow(["Menu", "Harga"])
+        writer.writerow(["Menu", "Harga","Stok"])
         for row in menu:
             if (row[0] != None):
                 writer.writerow(row)
@@ -629,6 +656,7 @@ def cekmember():
     nama = 'Tubes-Daspro/member.csv'
     mmember = bacacsv(nama, 3)
     while loginStatus==False:
+        clogin=True
         telp = input("Masukkan nomor telepon member: ")
         pw = input("Masukkan password member: ")
         index = 0
@@ -644,13 +672,13 @@ def cekmember():
                 diskon=90/100
                 discount=True
                 loginStatus=True
+                clogin=False
             index += 1
-        if status==True:
+        if clogin==True:
             print("Member tidak ditemukan mohon masukkan ulang no.telepon dan password")
             time.sleep(2)
             diskon=0
-            cekmember()
-            loginStatus=False    
+            loginStatus=False
     if discount:
         print(f"\nTotal Bayar setelah discount: Rp. {int(total * diskon)}")
         total = int(total * diskon)
@@ -768,10 +796,11 @@ def prosesUser():
         time.sleep(2.5)
         prosesUser()
 
-    menu = tampilanMenu()
-    pesanan = [[None]*3 for _ in range(100)]
+    pesanan = [None]*100
+    for i in range(0,100,1):
+        pesanan[i]=[None]*3
     jumlahPesanan = 0
-
+    menu = tampilanMenu()
     cond = True
     while cond == True:
         pilihMakanan = int(input("\nPilih nomor menu (0 jika selesai): "))
@@ -892,8 +921,12 @@ def main():
         main()
 
 if __name__ == '__main__':
-    members = [[None]*3 for _ in range(100)]
+    members = [None]*100
+    for i in range(0,100,1):
+        members[i]=[None]*3
     jumlahMember = 0
-    transaksi = [[None]*4 for _ in range(100)]
+    transaksi = [None]*100
+    for i in range(0,100,1):
+        transaksi[i]=[None]*4
     jumlahTransaksi = 0
     main()
