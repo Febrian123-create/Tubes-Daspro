@@ -25,7 +25,7 @@ def bacacsv(name, ukuran):
 def cekcsv(file_path):
     with open(file_path, 'r') as file:
         first_line = file.readline()
-        if first_line:
+        if not first_line:
             return True
         second_line = file.readline()
         if not second_line:
@@ -100,29 +100,61 @@ def lihatTransaksiHari():
 def akhirihari():
     os.system("cls")
     nama = 'Tubes-Daspro/transaksi.csv'
-    cek=cekcsv(nama)
-    if(cek==False):
-        mtransaksi = bacacsv(nama, 4)
-        print("Hari ini Berakhir!! Sampai Jumpa!")
-        count = 0
-        while (mtransaksi[count][0]!=None):
-            count += 1
-        if count > 0:
-            tanggal = input("Masukkan tanggal (DDMMYYYY): ")
-            with open(f'Tubes-Daspro/transaksi_{tanggal}.csv', 'w',newline='') as backup:
-                writer = csv.writer(backup)
-                writer.writerow(["Meja","Menu","Jumlah","Total"])
-                for i in range (0,count,1):
-                    writer.writerow([mtransaksi[i][0],mtransaksi[i][1],mtransaksi[i][2],mtransaksi[i][3]])
+    mtransaksi = bacacsv(nama, 4)
+    print("Hari ini Berakhir!! Sampai Jumpa!")
+    count = 0
+    while (mtransaksi[count][0]!=None):
+        count += 1
+    if count > 0:
+        tanggal = input("Masukkan tanggal (DDMMYYYY): ")
+        i = 0
+        n = 0
+        jumlah = 0
+        while mtransaksi[i][0] != None:
+            jumlah += int(mtransaksi[i][3])
+            n += 1
+            i += 1
+        print("Total pendapatan hari ini: Rp.", jumlah)
+        print('=' * 30)
+        print("Total Pendapatan dari meja:")
+        s_array = [None] * 100
+        j_array = [0] * 100
+        campur(mtransaksi,s_array, j_array, n, 0, 3)
+        for i in range(n):
+            if s_array[i] != None:
+                print(f"Meja {s_array[i]} : Rp.{j_array[i]}")
+        print('=' * 30)
+        print("Total pendapatan/menu:")
+        s_array = [None] * 100
+        j_array = [0] * 100
+        campur(mtransaksi,s_array, j_array, n, 1, 3)
+        for i in range(n):
+            if s_array[i] != None:
+                print(f"Menu {s_array[i]} : Rp.{j_array[i]}")
+        print('=' * 30)
+        print("Jumlah Menu yang laku:")
+        s_array = [None] * 100
+        j_array = [0] * 100
+        campur(mtransaksi,s_array, j_array, n, 1, 2)
+        for i in range(n):
+            if s_array[i] != None:
+                print(f"Menu {s_array[i]} : {j_array[i]}")
+        print('=' * 30)
+        print("Belum ada transaksi")
+        input("\nTekan Enter untuk kembali ke menu Admin: ")
+        with open(f'Tubes-Daspro/transaksi_{tanggal}.csv', 'w',newline='') as backup:
+            writer = csv.writer(backup)
+            writer.writerow(["Meja","Menu","Jumlah","Total"])
+            for i in range (0,count,1):
+                writer.writerow([mtransaksi[i][0],mtransaksi[i][1],mtransaksi[i][2],mtransaksi[i][3]])
             backup.close()
-            with open('Tubes-Daspro/transaksi.csv', 'w') as file:
+            print(f"Backup dibuat untuk tanggal {tanggal}")
+            with open(f'Tubes-Daspro/transaksi.csv', 'w',newline='') as file:
                 writer = csv.writer(file)
                 writer.writerow(["Meja","Menu","Jumlah","Total"])
-            print(f"Backup dibuat untuk tanggal {tanggal}")
-            PendapatanHariIni()
     else:
         print("Tidak ada transaksi hari ini")
-    input("\nTekan Enter untuk kembali ke menu admin: ")
+        input("\nTekan Enter untuk kembali ke menu admin: ")
     menuAdmin()
 
 def menuAdmin():
@@ -308,6 +340,7 @@ def PendapatanHari():
     print('=' * 30)
     input("\nTekan Enter untuk kembali ke menu admin: ")
     tampilPendapatan()
+
 def signup():
     username = str(input("Buat Username anda: "))
     password = str(input("Buat Password anda: "))
@@ -637,10 +670,18 @@ def prosesUser():
 
 def simpan_transaksi_csv():
     path = "Tubes-Daspro/transaksi.csv"
-    with open(path, mode="a+", newline="") as file:
-        writer = csv.writer(file)
-        for i in range(jumlahTransaksi):
-            writer.writerow(transaksi[i])
+    cek=cekcsv(path)
+    if cek == True:
+        with open(f'Tubes-Daspro/transaksi.csv', 'w',newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["Meja","Menu","Jumlah","Total"])
+            for i in range(jumlahTransaksi):
+                writer.writerow(transaksi[i])
+    else:
+        with open(path, mode="a+", newline="") as file:
+            writer = csv.writer(file)
+            for i in range(jumlahTransaksi):
+                writer.writerow(transaksi[i])
     print("Data transaksi telah disimpan ke transaksi.csv")
 
 def main():
