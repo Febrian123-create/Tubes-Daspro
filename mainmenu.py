@@ -209,8 +209,6 @@ def menuAdmin():
         time.sleep(1.5)
         menuAdmin()
 
-
-
 # Fungsi untuk membaca semua file transaksi
 # data : sumber file
 # file_transaksi : list untuk menyimpan nama file transaksi
@@ -786,11 +784,13 @@ def prosesUser():
     os.system("cls")
     meja = 0
     print("\n====== Layanan Cafe ======\n")
-    layanan = int(input("Pilih layanan (1. Takeaway | 2. Dine In): "))
+    layanan = int(input("Pilih layanan (1. Takeaway | 2. Dine In |3.Kembali): "))
     if layanan == 2:
         meja = input("Masukkan nomor meja: ")
     elif layanan == 1:
         meja = "Takeaway"
+    elif layanan==3:
+        main()
     else:
         print("Masukkan 1 atau 2.")
         time.sleep(2.5)
