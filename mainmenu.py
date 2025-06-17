@@ -165,8 +165,9 @@ def menuAdmin():
     print("3. Cari Transaksi Berdasarkan Menu")
     print("4. Lihat Daftar Member")
     print("5. Kelola Menu")
-    print("6. Akhiri Hari")
-    print("7. Keluar")
+    print("6. Tambah Stok")
+    print("7. Akhiri Hari")
+    print("8. Keluar")
     pilihan = input("Pilih menu: ")
     if pilihan == "1":
         lihatTransaksi()
@@ -175,37 +176,77 @@ def menuAdmin():
     elif pilihan == "3":
         tampilanMenu()
         carimenu = int(input("Menu yang dicari : "))
-        SearchMenu(carimenu, 2)
+        SearchMenu(carimenu, menu)
     elif pilihan =="4":
         lihatMember()
     elif pilihan == "5":
         kelolaMenu()
-    elif pilihan =="6":
-        akhirihari()
+    elif pilihan == "6":
+        tambahStok()
     elif pilihan =="7":
+        akhirihari()
+    elif pilihan =="8":
         main()
     else:
         print("Pilihan tidak valid.")
         time.sleep(1.5)
         menuAdmin()
 
-def SearchMenu(carimenu, layanan):
-    file = "Tubes-Daspro/transaksi.csv"
-    data = bacacsv(file, 4)
-    tampilanMenu()
+
+
+# Fungsi untuk membaca semua file transaksi
+# data : sumber file
+# file_transaksi : list untuk menyimpan nama file transaksi
+# count : untuk menghitung jumlah file yang ditemukan
+# file : untuk mengecek setiap file dalam folder
+# file_valid : list untuk menyimpan nama file yang valid
+def baca_semua_transaksi():
+    data = 'Tubes-Daspro/'
+    file_transaksi = [None] * 100  
+    count = 0  
+    for file in os.listdir(data):
+        if file.startswith('transaksi_') and file.endswith('.csv'):
+            if count < 100:  
+                file_transaksi[count] = file
+                count += 1
+    file_valid = [file_transaksi[i] for i in range(count)]
+    return file_valid 
+
+# Fungsi untuk mencari transaksi berdasarkan menu
+# found : untuk mengecek apakah menu ditemukan
+# num : untuk menghitung jumlah transaksi yang ditemukan
+# data : untuk menyimpan data dari file transaksi
+# i : untuk indeks data
+# tanggal : untuk menyimpan tanggal dari nama file
+# carimenu : untuk menyimpan pilihan menu yang dicari
+# menu : untuk menyimpan daftar menu
+def SearchMenu(carimenu, menu):
+    file_transaksi = baca_semua_transaksi()
     found = False
     print("\n====== Hasil Pencarian ======\n")
-    i = 0
     num = 1
-    while (data[i][0] != None):
-        if (data[i][1] == menu[carimenu-1][0]):   
-            print(f"{num}. Meja: {data[i][0]}, Menu {data[i][1]}, Jumlah {data[i][2]}, Total Rp {data[i][3]}")
-            found = True
-            num += 1
-        i += 1
+    for file in file_transaksi:
+        data = bacacsv(f"Tubes-Daspro/{file}", 4)
+        i = 0
+        tanggal = file[10:18]
+        while True:
+            if data[i][0] == None:
+                break
+            elif (data[i][1] == menu[carimenu-1][0]):   
+                print(f"{num}. Tanggal : {tanggal} Meja {data[i][0]}, Menu {data[i][1]}, Jumlah {data[i][2]}, Total Rp {data[i][3]}")
+                found = True
+                num += 1
+            i += 1
+    if not found:
+        print(f"Menu tidak ditemukan dalam transaksi.")
     input("\nTekan Enter untuk kembali ke menu admin: ")
     menuAdmin()
-        
+
+# Fungsi untuk mengelola menu
+# plh : untuk menginput pilihan menu
+# tambahMenu : untuk menambahkan menu baru
+# hapusMenu : untuk menghapus menu yang ada
+# editMenu : untuk mengedit menu yang ada      
 def kelolaMenu():
     os.system("cls")
     print("\n====== Kelola Menu ======\n")
@@ -397,6 +438,12 @@ def login():
         time.sleep(2)
         login()
 
+# Fungsi untuk menampilkan loading bar
+# i : untuk menghitung jumlah iterasi
+# persen : untuk menghitung persentase dari total
+# bar : untuk menyimpan string dari loading bar
+# j : untuk menghitung jumlah karakter yang sudah diisi
+# k : untuk menghitung jumlah karakter yang belum diisi
 def loading(total):
     for i in range(total + 1):
         persen = (i * 100) / total  # buat itung persen 
@@ -409,34 +456,77 @@ def loading(total):
         print(f'\r[{bar}] {int(persen)}%', end='')
         time.sleep(0.2)
     return 
+def tambahStok():
+    file = "Tubes-Daspro/menu.csv"
+    menu = bacacsv(file, 3)
+    print("\n====== Tambah Stok ======\n")
+    tampilanMenu()
+    baris = int(input("Pilih nomor menu untuk menambah stok: ")) - 1
+    if (baris < 0 or menu[baris][0] == None):
+        print("Nomor menu tidak ada")
+        time.sleep(2)
+        tambahStok()
+        return
+    
+    tambah_stok = int(input("Masukkan jumlah stok yang ingin ditambahkan: "))
+    menu[baris][2] = int(menu[baris][2]) + tambah_stok  # Update stok
+
+    with open(file, mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Menu", "Harga", "Stok"])
+        i = 0
+        while (menu[i][0] != None):
+            writer.writerow(menu[i])
+            i += 1
+    print("Stok berhasil ditambahkan.")
+    time.sleep(2)
+    menuAdmin()
+
 
 def tampilanMenu():
     global menu
     global num
     file = "Tubes-Daspro/menu.csv"
-    menu = bacacsv(file,2)
+    menu = bacacsv(file,3)
     print("\n====== Menu ======\n")
     num = 1
     i=0
     while (menu[i][0] != None):
-        print(f"{num}. {menu[i][0]} - Rp {menu[i][1]}")
+        stok = menu[i][2]
+        if stok == "0":
+            print(f"{num}. {menu[i][0]} - Rp {menu[i][1]} (habis)")
+        else:    
+            print(f"{num}. {menu[i][0]} - Rp {menu[i][1]}")
         num += 1
         i +=1
     return menu
-
+# Fungsi untuk menambahkan menu baru
+# file : untuk menyimpan menu.csv
+# nama : untuk menginput nama menu baru
+# harga : untuk menginput harga menu baru
+# writer : untuk menulis data ke dalam file csv
 def tambahMenu():
     file = "Tubes-Daspro/menu.csv"
     print("\n====== Tambah Menu ======\n")
     tampilanMenu()
     nama = str(input("Masukkan menu baru: "))
     harga = int(input("Harga menu: "))
+    stok = int(input("jumlah stok awal: "))
     with open(file, mode="a+", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow([nama, harga])
+        writer.writerow([nama, harga, stok])
     print("Menu berhasil ditambahkan")
     time.sleep(2)
     kelolaMenu()
 
+# Fungsi untuk mengedit menu yang sudah ada
+# file : untuk menyimpan menu.csv
+# menu : untuk menyimpan data dari file csv
+# baris : untuk menginput nomor menu yang ingin diedit
+# edit_nama : untuk menginput nama baru
+# edit_harga : untuk menginput harga baru
+# writer : untuk menulis data ke dalam file csv
+# i : untuk menghitung jumlah menu yang sudah ada
 def editMenu():
     file = "Tubes-Daspro/menu.csv"
     menu = bacacsv(file,2)
@@ -470,6 +560,10 @@ def editMenu():
     time.sleep(2)
     kelolaMenu()
 
+# Fungsi untuk menghapus menu yang sudah ada
+# file : untuk menyimpan menu.csv
+# menu : untuk menyimpan data dari file csv
+# hapus : untuk menginput nomor menu yang ingin dihapus
 def hapusMenu():
     file = "Tubes-Daspro/menu.csv"
     menu = bacacsv(file,2)
@@ -617,18 +711,23 @@ def prosesUser():
         elif pilihMakanan >= num:
             print(f"Maaf makanan nomor {pilihMakanan} tidak ada, silahkan pilih makanan lain")
         else:
-            jumlah = int(input("Masukkan Jumlah: "))
-            if jumlah <= 30:
-                index = pilihMakanan - 1
-                nama = menu[index][0]
-                harga = int(menu[index][1])
-                pesanan[jumlahPesanan] = [nama, jumlah, harga]
-                totalItem = harga * jumlah
-                transaksi[jumlahTransaksi] = [meja, nama, jumlah, totalItem]
-                jumlahTransaksi += 1
-                jumlahPesanan += 1
+            index = pilihMakanan - 1
+            stok_makanan = int(menu[index][2])
+            if stok_makanan == 0:
+                print(f"Maaf, {menu[index][0]} sudah habis.")
             else:
-                print("Maaf pesanan tidak bisa melebihi 30 item")
+                jumlah = int(input("Masukkan Jumlah: "))
+                if jumlah <= 30 and int(menu[index][2]) >= jumlah:
+                    nama = menu[index][0]
+                    harga = int(menu[index][1])
+                    pesanan[jumlahPesanan] = [nama, jumlah, harga]
+                    totalItem = harga * jumlah
+                    transaksi[jumlahTransaksi] = [meja, nama, jumlah, totalItem]
+                    jumlahTransaksi += 1
+                    jumlahPesanan += 1
+                    menu[index][2] = int(menu[index][2]) - jumlah
+                else:
+                    print("Maaf pesanan tidak bisa melebihi 30 item atau makanan sudah habis.")
 
     print("\n====== Struk Pembayaran ======\n")
     total = 0
@@ -666,6 +765,12 @@ def prosesUser():
         print("Terimakasih sudah datang ke restoran kami!")
     time.sleep(1.5)
     simpan_transaksi_csv()
+    with open("Tubes-Daspro/menu.csv", mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Menu", "Harga", "Stok"])
+        for i in range(num - 1):
+            if menu[i][0] != None:
+                writer.writerow(menu[i])
     main()
 
 def simpan_transaksi_csv():
