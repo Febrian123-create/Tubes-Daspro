@@ -469,7 +469,7 @@ def tambahStok():
         return
     
     tambah_stok = int(input("Masukkan jumlah stok yang ingin ditambahkan: "))
-    menu[baris][2] = int(menu[baris][2]) + tambah_stok  # Update stok
+    menu[baris][2] = int(menu[baris][2]) + tambah_stok  
 
     with open(file, mode="w", newline="") as file:
         writer = csv.writer(file)
