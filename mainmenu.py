@@ -39,6 +39,20 @@ def lihatMember():
 
 def lihatTransaksi():
     os.system("cls")
+    print("\n====== Tampil Transaksi ======\n")
+    print("1.Transaksi Hari Ini")
+    print("2.Transaksi Hari Tertentu")
+    print("3.Kembali")
+    plh=int(input("Masukkan pilihan: "))
+    if plh ==1:
+        TransaksiHariIni()
+    elif plh ==2:
+        lihatTransaksiHari()
+    elif plh ==3:
+        menuAdmin()
+
+def TransaksiHariIni():
+    os.system("cls")
     nama = 'Tubes-Daspro/transaksi.csv'
     mtransaksi = bacacsv(nama, 4)
     print("\n====== Semua Transaksi ======")
@@ -49,17 +63,57 @@ def lihatTransaksi():
         num += 1
         i +=1
     input("Tekan Enter untuk kembali ke menu admin: ")
-    menuAdmin()
+    lihatTransaksi()
+
+def lihatTransaksiHari():
+    os.system("cls")
+    tanggal=input("Masukkan tanggal (DDMMYYYY): ")
+    nama = f"Tubes-Daspro/transaksi_{tanggal}.csv"
+    mtransaksi = bacacsv(nama, 4)
+    print(f"\n====== Transaksi Hari {tanggal} ======")
+    num = 1
+    i=0
+    while(mtransaksi[i][0] != None):
+        print(f"{num}. Meja: {mtransaksi[i][0]} | Menu: {mtransaksi[i][1]} x{mtransaksi[i][2]} | Total: Rp {mtransaksi[i][3]}")
+        num += 1
+        i +=1
+    input("Tekan Enter untuk kembali ke menu admin: ")
+    lihatTransaksi
+
+def akhirihari():
+    os.system("cls")
+    nama = 'Tubes-Daspro/transaksi.csv'
+    mtransaksi = bacacsv(nama, 4)
+    print("Hari ini Berakhir!! Sampai Jumpa!")
+    count = 0
+    while (mtransaksi[count][0]!=None):
+        count += 1
+    if count > 0:
+        tanggal = input("Masukkan tanggal (DDMMYYYY): ")
+        with open(f'Tubes-Daspro/transaksi_{tanggal}.csv', 'w',newline='') as backup:
+            writer = csv.writer(backup)
+            writer.writerow(["Meja","Menu","Jumlah","Total"])
+            for i in range (0,count,1):
+                writer.writerow([mtransaksi[i][0],mtransaksi[i][1],mtransaksi[i][2],mtransaksi[i][3]])
+        backup.close()
+        with open('Tubes-Daspro/transaksi.csv', 'w') as file:
+            writer = csv.writer(file)
+            writer.writerow(["Meja","Menu","Jumlah","Total"])
+        print(f"Backup dibuat untuk tanggal {tanggal}")
+    else:
+        print("Tidak ada transaksi hari ini")
+    PendapatanHariIni()
 
 def menuAdmin():
     os.system("cls")
     print("\n====== MENU ADMIN ======")
     print("1. Lihat Transaksi")
-    print("2. Lihat Pendapatan Hari Ini")
+    print("2. Lihat Pendapatan")
     print("3. Cari Transaksi Berdasarkan Menu")
     print("4. Lihat Daftar Member")
     print("5. Kelola Menu")
-    print("6. Keluar")
+    print("6. Akhiri Hari")
+    print("7. Keluar")
     pilihan = input("Pilih menu: ")
     if pilihan == "1":
         lihatTransaksi()
@@ -74,6 +128,8 @@ def menuAdmin():
     elif pilihan == "5":
         kelolaMenu()
     elif pilihan =="6":
+        akhirihari()
+    elif pilihan =="7":
         main()
     else:
         print("Pilihan tidak valid.")
@@ -133,6 +189,21 @@ def campur(mtransaksi,s_array, j_array, n, x, z):
             y += 1
 
 def tampilPendapatan():
+    os.system("cls")
+    print("\n====== Tampil Pendapatan ======\n")
+    print("1.Pendapatan Hari Ini")
+    print("2.Pendapatan Hari Tertentu")
+    print("3.Kembali")
+    plh=int(input("Masukkan pilihan: "))
+    if plh ==1:
+        PendapatanHariIni()
+    elif plh ==2:
+        PendapatanHari()
+    elif plh ==3:
+        menuAdmin()
+
+def PendapatanHariIni():
+    os.system("cls")
     nama = 'Tubes-Daspro/transaksi.csv'
     mtransaksi = bacacsv(nama,4)
     i = 0
@@ -169,8 +240,48 @@ def tampilPendapatan():
             print(f"Menu {s_array[i]} : {j_array[i]}")
     print('=' * 30)
     input("\nTekan Enter untuk kembali ke menu admin: ")
-    menuAdmin()
-
+    tampilPendapatan()
+    
+def PendapatanHari():
+    os.system("cls")
+    tanggal=input("Masukkan tanggal (DDMMYYYY): ")
+    nama = f"Tubes-Daspro/transaksi_{tanggal}.csv"
+    mtransaksi = bacacsv(nama,4)
+    i = 0
+    n = 0
+    jumlah = 0
+    while mtransaksi[i][0] != None:
+        jumlah += int(mtransaksi[i][3])
+        n += 1
+        i += 1
+    print("Total pendapatan hari ini: Rp.", jumlah)
+    print('=' * 30)
+    print("Total Pendapatan dari meja:")
+    s_array = [None] * 100
+    j_array = [0] * 100
+    campur(mtransaksi,s_array, j_array, n, 0, 3)
+    for i in range(n):
+        if s_array[i] != None:
+            print(f"Meja {s_array[i]} : Rp.{j_array[i]}")
+    print('=' * 30)
+    print("Total pendapatan/menu:")
+    s_array = [None] * 100
+    j_array = [0] * 100
+    campur(mtransaksi,s_array, j_array, n, 1, 3)
+    for i in range(n):
+        if s_array[i] != None:
+            print(f"Menu {s_array[i]} : Rp.{j_array[i]}")
+    print('=' * 30)
+    print("Jumlah Menu yang laku:")
+    s_array = [None] * 100
+    j_array = [0] * 100
+    campur(mtransaksi,s_array, j_array, n, 1, 2)
+    for i in range(n):
+        if s_array[i] != None:
+            print(f"Menu {s_array[i]} : {j_array[i]}")
+    print('=' * 30)
+    input("\nTekan Enter untuk kembali ke menu admin: ")
+    tampilPendapatan()
 def signup():
     username = str(input("Buat Username anda: "))
     password = str(input("Buat Password anda: "))
