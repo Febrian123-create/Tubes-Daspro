@@ -14,7 +14,7 @@ def bacacsv(name, ukuran):
         skip = True
         i = 0
         for row in reader:
-            if skip:
+            if skip==True:
                 skip = False
             else:
                 for j in range(0, ukuran, 1):
@@ -779,16 +779,14 @@ def prosesUser():
         pesanan[i]=[None]*3
     jumlahPesanan = 0
     menu = tampilanMenu()
+    print("99.Back")
     cond = True
     while cond == True:
         pilihMakanan = int(input("\nPilih nomor menu (0 jika selesai): "))
         if pilihMakanan == 0:
             cond = False
-            lanjut=str(input("Mau lanjut pesan?[Y/N]: "))
-            if lanjut=='Y':
-                cond=True
-            elif lanjut=='N':
-                usermenu()
+        elif pilihMakanan==99:
+            usermenu()
         elif pilihMakanan >= num:
             print(f"Maaf makanan nomor {pilihMakanan} tidak ada, silahkan pilih makanan lain")
         else:
