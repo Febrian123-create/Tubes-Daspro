@@ -63,18 +63,16 @@ def lihatTransaksi():
     os.system("cls")
     print("\n====== Tampil Transaksi ======\n")
     print("1.Transaksi Hari Ini")
-    print("2.Transaksi Hari Tertentu")
-    print("3.Kembali")
+    print("2.Kembali")
     plh=int(input("Masukkan pilihan: "))
     if plh ==1:
         TransaksiHariIni()
     elif plh ==2:
-        lihatTransaksiHari()
-    elif plh ==3:
         menuAdmin()
     else:
         print("Pilihan tidak valid")
         lihatTransaksi()
+        
 def TransaksiHariIni():
     os.system("cls")
     nama = 'Tubes-Daspro/transaksi.csv'
@@ -209,24 +207,6 @@ def menuAdmin():
         time.sleep(1.5)
         menuAdmin()
 
-# Fungsi untuk membaca semua file transaksi
-# data : sumber file
-# file_transaksi : list untuk menyimpan nama file transaksi
-# count : untuk menghitung jumlah file yang ditemukan
-# file : untuk mengecek setiap file dalam folder
-# file_valid : list untuk menyimpan nama file yang valid
-def baca_semua_transaksi():
-    data = 'Tubes-Daspro/'
-    file_transaksi = [None] * 100  
-    count = 0  
-    for file in os.listdir(data):
-        if file.startswith('transaksi_') and file.endswith('.csv'):
-            if count < 100:  
-                file_transaksi[count] = file
-                count += 1
-    file_valid = [file_transaksi[i] for i in range(count)]
-    return file_valid 
-
 # Fungsi untuk mencari transaksi berdasarkan menu
 # found : untuk mengecek apakah menu ditemukan
 # num : untuk menghitung jumlah transaksi yang ditemukan
@@ -236,23 +216,22 @@ def baca_semua_transaksi():
 # carimenu : untuk menyimpan pilihan menu yang dicari
 # menu : untuk menyimpan daftar menu
 def SearchMenu(carimenu, menu):
-    file_transaksi = baca_semua_transaksi()
+    file = "Tugas-Daspro/transaksi.scv" 
     found = False
     print("\n====== Hasil Pencarian ======\n")
     num = 1
-    for file in file_transaksi:
-        data = bacacsv(f"Tubes-Daspro/{file}", 4)
-        i = 0
-        tanggal = file[10:18]
-        status=True
-        while status==True:
-            if data[i][0] == None:
-                status=False
-            elif (data[i][1] == menu[carimenu-1][0]):   
-                print(f"{num}. Tanggal : {tanggal} Meja {data[i][0]}, Menu {data[i][1]}, Jumlah {data[i][2]}, Total Rp {data[i][3]}")
-                found = True
-                num += 1
-            i += 1
+    data = bacacsv(f"Tubes-Daspro/transaksi.csv", 4)
+    i = 0
+    tanggal = file[10:18]
+    status=True
+    while status==True:
+        if data[i][0] == None:
+            status=False
+        elif (data[i][1] == menu[carimenu-1][0]):   
+            print(f"{num}. Meja {data[i][0]}, Menu {data[i][1]}, Jumlah {data[i][2]}, Total Rp {data[i][3]}")
+            found = True
+            num += 1
+        i += 1
     if not found:
         print(f"Menu tidak ditemukan dalam transaksi.")
     input("\nTekan Enter untuk kembali ke menu admin: ")
@@ -806,6 +785,11 @@ def prosesUser():
         pilihMakanan = int(input("\nPilih nomor menu (0 jika selesai): "))
         if pilihMakanan == 0:
             cond = False
+            lanjut=str(input("Mau lanjut pesan?[Y/N]: "))
+            if lanjut=='Y':
+                cond=True
+            elif lanjut=='N':
+                usermenu()
         elif pilihMakanan >= num:
             print(f"Maaf makanan nomor {pilihMakanan} tidak ada, silahkan pilih makanan lain")
         else:
