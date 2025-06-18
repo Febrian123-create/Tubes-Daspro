@@ -29,7 +29,7 @@ def cekcsv(file_path):
         stop = False
         while not stop:
             char = file.read(1)
-            if char == "":  # EOF
+            if char == "":
                 stop = True
             else:
                 if char != '\n' and not inside_line:
@@ -72,7 +72,7 @@ def lihatTransaksi():
     else:
         print("Pilihan tidak valid")
         lihatTransaksi()
-        
+
 def TransaksiHariIni():
     os.system("cls")
     nama = 'Tubes-Daspro/transaksi.csv'
@@ -216,13 +216,12 @@ def menuAdmin():
 # carimenu : untuk menyimpan pilihan menu yang dicari
 # menu : untuk menyimpan daftar menu
 def SearchMenu(carimenu, menu):
-    file = "Tugas-Daspro/transaksi.scv" 
+    file = "Tubes-Daspro/transaksi.csv" 
     found = False
     print("\n====== Hasil Pencarian ======\n")
     num = 1
-    data = bacacsv(f"Tubes-Daspro/transaksi.csv", 4)
+    data = bacacsv(file, 4)
     i = 0
-    tanggal = file[10:18]
     status=True
     while status==True:
         if data[i][0] == None:
