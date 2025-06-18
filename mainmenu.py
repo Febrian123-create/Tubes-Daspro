@@ -4,7 +4,7 @@ from logo import logo
 
 print(logo)
 time.sleep(2.5)
-
+#Febrian
 def bacacsv(name, ukuran):
     matriks = [None] * 100
     for i in range(0, 100, 1):
@@ -21,7 +21,7 @@ def bacacsv(name, ukuran):
                     matriks[i][j] = row[j]
                 i += 1
     return matriks
-
+#Febrian
 def cekcsv(file_path):
     with open(file_path, 'r') as file:
         line_count = 0
@@ -43,7 +43,7 @@ def cekcsv(file_path):
             return True
         else:
             return False
-
+#Febrian
 def lihatMember():
     os.system("cls")
     nama = 'Tubes-Daspro/member.csv'
@@ -59,6 +59,7 @@ def lihatMember():
     input("Tekan Enter untuk kembali ke menu admin: ")
     menuAdmin()
 
+#Febrian
 def lihatTransaksi():
     os.system("cls")
     print("\n====== Tampil Transaksi ======\n")
@@ -72,7 +73,7 @@ def lihatTransaksi():
     else:
         print("Pilihan tidak valid")
         lihatTransaksi()
-
+#Febrian
 def TransaksiHariIni():
     os.system("cls")
     nama = 'Tubes-Daspro/transaksi.csv'
@@ -93,7 +94,7 @@ def TransaksiHariIni():
         input("Tekan Enter untuk kembali ke menu admin: ")
         menuAdmin()
 
-
+#Febrian
 def lihatTransaksiHari():
     os.system("cls")
     tanggal=input("Masukkan tanggal (DDMMYYYY): ")
@@ -109,6 +110,7 @@ def lihatTransaksiHari():
     input("Tekan Enter untuk kembali ke menu Lihat Transaksi: ")
     lihatTransaksi()
 
+#Febrian
 def akhirihari():
     os.system("cls")
     nama = 'Tubes-Daspro/transaksi.csv'
@@ -172,6 +174,7 @@ def akhirihari():
 # fungsi menu pilih fitur  untuk admin
 #  pilihan = var int input pilih menu
 
+#Yosua
 def menuAdmin():
     os.system("cls")
     print("\n====== MENU ADMIN ======")
@@ -215,6 +218,8 @@ def menuAdmin():
 # tanggal : untuk menyimpan tanggal dari nama file
 # carimenu : untuk menyimpan pilihan menu yang dicari
 # menu : untuk menyimpan daftar menu
+
+#Jeryko
 def SearchMenu(carimenu, menu):
     file = "Tubes-Daspro/transaksi.csv" 
     found = False
@@ -240,7 +245,9 @@ def SearchMenu(carimenu, menu):
 # plh : untuk menginput pilihan menu
 # tambahMenu : untuk menambahkan menu baru
 # hapusMenu : untuk menghapus menu yang ada
-# editMenu : untuk mengedit menu yang ada      
+# editMenu : untuk mengedit menu yang ada
+
+# Jeryko
 def kelolaMenu():
     os.system("cls")
     print("\n====== Kelola Menu ======\n")
@@ -263,6 +270,7 @@ def kelolaMenu():
         time.sleep(1.5)
         kelolaMenu()
 
+# Febrian
 def campur(mtransaksi,s_array, j_array, n, x, z):
     y = 0
     for i in range(n):
@@ -276,6 +284,7 @@ def campur(mtransaksi,s_array, j_array, n, x, z):
             j_array[y] = int(mtransaksi[i][z])
             y += 1
 
+# Jeryko
 def tampilPendapatan():
     os.system("cls")
     print("\n====== Tampil Pendapatan ======\n")
@@ -292,6 +301,8 @@ def tampilPendapatan():
     else:
         print("Pilihan tidak valid")
         tampilPendapatan()
+
+# Febrian
 def PendapatanHariIni():
     os.system("cls")
     nama = 'Tubes-Daspro/transaksi.csv'
@@ -338,6 +349,7 @@ def PendapatanHariIni():
         input("\nTekan Enter untuk kembali ke menu Admin: ")
         menuAdmin()
 
+# Febrian
 def PendapatanHari():
     os.system("cls")
     tanggal=input("Masukkan tanggal (DDMMYYYY): ")
@@ -384,6 +396,8 @@ def PendapatanHari():
 # password = var input string buat password
 # file_path = filepath csv
 # data = var array simpan username dan password
+
+# Yosua
 def signup():
     username = str(input("Buat Username anda: "))
     password = str(input("Buat Password anda: "))
@@ -406,6 +420,8 @@ def signup():
 # status = var boolean
 # cstatus = var booleabn
 # ask = var input string yes or no
+
+# Yosua
 def login():
     os.system("cls")
     nama = 'Tubes-Daspro/account.csv'
@@ -456,6 +472,8 @@ def login():
 # bar : untuk menyimpan string dari loading bar
 # j : untuk menghitung jumlah karakter yang sudah diisi
 # k : untuk menghitung jumlah karakter yang belum diisi
+
+# Jeryko
 def loading(total):
     for i in range(total + 1):
         persen = (i * 100) / total  # buat itung persen 
@@ -469,6 +487,7 @@ def loading(total):
         time.sleep(0.2)
     return 
 
+# Jeryko
 def tambahStok():
     os.system("cls")
     file = "Tubes-Daspro/menu.csv"
@@ -503,6 +522,8 @@ def tambahStok():
 # num = var nampilin nomor
 # i  = var iterasi
 # stok = var stok makanan
+
+# Bareng
 def tampilanMenu():
     global menu
     global num
@@ -525,6 +546,8 @@ def tampilanMenu():
 # nama : untuk menginput nama menu baru
 # harga : untuk menginput harga menu baru
 # writer : untuk menulis data ke dalam file csv
+
+# Jeryko
 def tambahMenu():
     os.system("cls")
     file = "Tubes-Daspro/menu.csv"
@@ -548,6 +571,8 @@ def tambahMenu():
 # edit_harga : untuk menginput harga baru
 # writer : untuk menulis data ke dalam file csv
 # i : untuk menghitung jumlah menu yang sudah ada
+
+#Jeryko
 def editMenu():
     os.system("cls")
     file = "Tubes-Daspro/menu.csv"
@@ -588,6 +613,8 @@ def editMenu():
 # file : untuk menyimpan menu.csv
 # menu : untuk menyimpan data dari file csv
 # hapus : untuk menginput nomor menu yang ingin dihapus
+
+# Jeryko
 def hapusMenu():
     os.system("cls")
     file = "Tubes-Daspro/menu.csv"
@@ -625,6 +652,8 @@ def hapusMenu():
 # mmember = data member dari csv
 # nama = filepath csv
 # diskon = var besaran diskon
+
+# Yosua & Feb
 def cekmember():
     global total
     discount = False
@@ -666,6 +695,7 @@ def cekmember():
 # nama = var input string nama user
 # pw = var input string password
 
+# Yosua 
 def buatmember():
     telp = str(input("Masukkan telp anda: "))
     nama = str(input("Masukkan nama anda: "))
@@ -678,6 +708,7 @@ def buatmember():
     print("Akun berhasil dibuat!")
     cekmember()
 
+# Febrian
 def GiveRating():
     nama=str(input("Masukkan nama anda: "))
     Rating = int(input("Masukkan rating anda (1-10): "))
@@ -688,6 +719,7 @@ def GiveRating():
         writer = csv.writer(file)
         writer.writerow(data)
 
+# Febrian
 def tampilrating():
     os.system("cls")
     print("\n====== Rating Cafe ======\n")
@@ -710,7 +742,8 @@ def tampilrating():
     print("Rata-rata rating cafe:",round(rata_rata,1))
     input("\nTekan Enter untuk kembali ke menu user:")
     usermenu()
-    
+
+# Yosua
 def usermenu():
     os.system("cls")
     print("\n====== Menu User ======\n")
@@ -757,6 +790,8 @@ def usermenu():
 # bayar = var input int bayar
 # kembalian = var kembalian dari uang yang dibayar
 # i_rating = var input string masukan rating
+
+# Yosua
 def prosesUser():
     global jumlahTransaksi,total
     os.system("cls")
@@ -867,6 +902,7 @@ def prosesUser():
                 writer.writerow(menu[i])
     main()
 
+# Febrian
 def simpan_transaksi_csv():
     path = "Tubes-Daspro/transaksi.csv"
     cek=cekcsv(path)
@@ -885,6 +921,8 @@ def simpan_transaksi_csv():
 
 # Fungsi menu utama
 # role = pilih role admin/user
+
+# Yosua
 def main():
     os.system("cls")
     print("=" * 50)
@@ -900,7 +938,7 @@ def main():
         print("Input Tidak Valid. Pilih 1 atau 2")
         time.sleep(2)
         main()
-
+# Yosua
 if __name__ == '__main__':
     members = [None]*100
     for i in range(0,100,1):
